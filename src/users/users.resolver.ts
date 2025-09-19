@@ -76,7 +76,12 @@ export class UsersResolver {
     @Args('updateUserInput') updateUserDto: UpdateUserDto,
     @GetUserGQL() user: User,
   ) {
-    const userObj = await this.usersService.update(id, updateUserDto, user?.id);
+    const userObj = await this.usersService.update(
+      id,
+      updateUserDto,
+      user?.id,
+      user?.role,
+    );
     return new UserDto(
       userObj.id,
       userObj.name,
@@ -92,7 +97,7 @@ export class UsersResolver {
     @Args('id', { type: () => ID }) id: string,
     @GetUserGQL() user: User,
   ) {
-    const userObj = await this.usersService.delete(id, user?.id);
+    const userObj = await this.usersService.delete(id, user?.id, user?.role);
     return new UserDto(
       userObj.id,
       userObj.name,

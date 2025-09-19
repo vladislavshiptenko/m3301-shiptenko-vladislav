@@ -196,6 +196,7 @@ export class ResumeApiController {
       id,
       updateResumeDto,
       user?.id,
+      user?.role,
     );
     return new ResumeDto(
       resume.id,
@@ -234,7 +235,7 @@ export class ResumeApiController {
     type: ErrorResponseDto,
   })
   async remove(@Param('id') id: string, @GetUser() user: User) {
-    const resume = await this.resumeService.remove(id, user?.id);
+    const resume = await this.resumeService.remove(id, user?.id, user?.role);
     return new ResumeDto(
       resume.id,
       resume.title,

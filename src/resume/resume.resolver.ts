@@ -107,6 +107,7 @@ export class ResumeResolver {
       id,
       updateResumeDto,
       user?.id,
+      user?.role,
     );
     return new ResumeDto(
       resume.id,
@@ -128,7 +129,7 @@ export class ResumeResolver {
     @Args('id', { type: () => ID }) id: string,
     @GetUserGQL() user: User,
   ) {
-    const resume = await this.resumeService.remove(id, user?.id);
+    const resume = await this.resumeService.remove(id, user?.id, user?.role);
     return new ResumeDto(
       resume.id,
       resume.title,

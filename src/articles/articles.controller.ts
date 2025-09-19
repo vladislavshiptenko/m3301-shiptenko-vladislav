@@ -26,6 +26,7 @@ import { User } from '../auth/entities/user.entity';
 import { MvcExceptionFilter } from '../filters/mvc-exception.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from '../storage/storage.service';
+import { NotificationService } from '../notification/notification.service';
 
 @ApiExcludeController()
 @Controller('articles')
@@ -34,6 +35,7 @@ export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
     private readonly storageService: StorageService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/create')
@@ -59,6 +61,7 @@ export class ArticlesController {
     };
 
     const article = await this.articlesService.create(articleWithUser, user.id);
+    this.notificationService.created('articles', article.title);
     return res.redirect(`/articles/${article.id}`);
   }
 
@@ -132,7 +135,13 @@ export class ArticlesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.articlesService.update(id, updateArticleDto, user?.id);
+    const article = await this.articlesService.update(
+      id,
+      updateArticleDto,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.updated('articles', article.title);
     return res.redirect(`/articles/${id}`);
   }
 
@@ -143,7 +152,8 @@ export class ArticlesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.articlesService.delete(id, user?.id);
+    const article = await this.articlesService.delete(id, user?.id, user?.role);
+    this.notificationService.deleted('articles', article.title);
     return res.redirect(`/articles`);
   }
 
@@ -160,6 +170,12 @@ export class ArticlesController {
       generateUniqueKey: true,
     });
 
-    await this.articlesService.updatePhoto(id, result.url, user?.id);
+    const article = await this.articlesService.updatePhoto(
+      id,
+      result.url,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.updated('articles', `${article.title} photo`);
   }
 }

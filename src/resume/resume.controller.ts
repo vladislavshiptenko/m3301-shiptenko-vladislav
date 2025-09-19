@@ -10,7 +10,8 @@ import {
   Res,
   Param,
   UseGuards,
-  NotFoundException, UseFilters,
+  NotFoundException,
+  UseFilters,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
@@ -23,12 +24,16 @@ import { AuthGuard } from '../guards/auth.guard';
 import { GetUser } from '../decorators/get-user.decorator';
 import { User } from '../auth/entities/user.entity';
 import { MvcExceptionFilter } from '../filters/mvc-exception.filter';
+import { NotificationService } from '../notification/notification.service';
 
 @ApiExcludeController()
 @Controller('resume')
 @UseFilters(MvcExceptionFilter)
 export class ResumeController {
-  constructor(private readonly resumeService: ResumeService) {}
+  constructor(
+    private readonly resumeService: ResumeService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Get('/create')
   @Render('resume/create')
@@ -51,6 +56,7 @@ export class ResumeController {
     @GetUser() user: User,
   ) {
     const resume = await this.resumeService.create(createResumeDto, user?.id);
+    this.notificationService.created('resume', resume.title);
     return res.redirect(`resume/${resume.id}`);
   }
 
@@ -137,7 +143,13 @@ export class ResumeController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.resumeService.update(id, updateResumeDto, user?.id);
+    const resume = await this.resumeService.update(
+      id,
+      updateResumeDto,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.updated('resume', resume.title);
     return res.redirect(`/resume/${id}`);
   }
 
@@ -148,7 +160,8 @@ export class ResumeController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.resumeService.remove(id, user?.id);
+    const resume = await this.resumeService.remove(id, user?.id, user?.role);
+    this.notificationService.deleted('resume', resume.title);
     return res.redirect(`/resume`);
   }
 }

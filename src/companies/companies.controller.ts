@@ -26,6 +26,7 @@ import { User } from '../auth/entities/user.entity';
 import { MvcExceptionFilter } from '../filters/mvc-exception.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from '../storage/storage.service';
+import { NotificationService } from '../notification/notification.service';
 
 @ApiExcludeController()
 @Controller('companies')
@@ -34,6 +35,7 @@ export class CompaniesController {
   constructor(
     private readonly companiesService: CompaniesService,
     private readonly storageService: StorageService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/create')
@@ -57,6 +59,7 @@ export class CompaniesController {
       createCompanyDto,
       user?.id,
     );
+    this.notificationService.created('companies', company.name);
     return res.redirect(`/companies/${company.id}`);
   }
 
@@ -131,7 +134,13 @@ export class CompaniesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.companiesService.update(id, updateCompanyDto, user?.id);
+    const company = await this.companiesService.update(
+      id,
+      updateCompanyDto,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.updated('companies', company.name);
     return res.redirect(`/companies/${id}`);
   }
 
@@ -142,7 +151,12 @@ export class CompaniesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.companiesService.delete(id, user?.id);
+    const company = await this.companiesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.deleted('companies', company.name);
     return res.redirect(`/companies`);
   }
 
@@ -159,6 +173,12 @@ export class CompaniesController {
       generateUniqueKey: true,
     });
 
-    await this.companiesService.updateAvatar(id, result.url, user?.id);
+    const company = await this.companiesService.updateAvatar(
+      id,
+      result.url,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.created('companies', `${company.name} photo`);
   }
 }

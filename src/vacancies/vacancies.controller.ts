@@ -10,7 +10,8 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   UseGuards,
-  NotFoundException, UseFilters,
+  NotFoundException,
+  UseFilters,
 } from '@nestjs/common';
 import { VacanciesService } from './vacancies.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -23,12 +24,16 @@ import { AuthGuard } from '../guards/auth.guard';
 import { GetUser } from '../decorators/get-user.decorator';
 import { User } from '../auth/entities/user.entity';
 import { MvcExceptionFilter } from '../filters/mvc-exception.filter';
+import { NotificationService } from '../notification/notification.service';
 
 @ApiExcludeController()
 @Controller('vacancies')
 @UseFilters(MvcExceptionFilter)
 export class VacanciesController {
-  constructor(private readonly vacanciesService: VacanciesService) {}
+  constructor(
+    private readonly vacanciesService: VacanciesService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Get('/create')
   @Render('vacancies/create')
@@ -53,7 +58,9 @@ export class VacanciesController {
     const vacancy = await this.vacanciesService.create(
       createVacancyDto,
       user?.id,
+      user?.role,
     );
+    this.notificationService.created('vacancies', vacancy.title);
     return res.redirect(`vacancies/${vacancy.id}`);
   }
 
@@ -140,7 +147,13 @@ export class VacanciesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.vacanciesService.update(id, updateVacancyDto, user?.id);
+    const vacancy = await this.vacanciesService.update(
+      id,
+      updateVacancyDto,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.updated('vacancies', vacancy.title);
     return res.redirect(`/vacancies/${id}`);
   }
 
@@ -151,7 +164,12 @@ export class VacanciesController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.vacanciesService.delete(id, user?.id);
+    const vacancy = await this.vacanciesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
+    this.notificationService.deleted('vacancies', vacancy.title);
     return res.redirect(`/vacancies`);
   }
 }

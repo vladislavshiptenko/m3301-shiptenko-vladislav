@@ -62,6 +62,7 @@ export class VacanciesApiController {
     const vacancy = await this.vacanciesService.create(
       createVacancyDto,
       user?.id,
+      user?.role,
     );
     return new VacancyDto(
       vacancy.id,
@@ -211,6 +212,7 @@ export class VacanciesApiController {
       id,
       updateVacancyDto,
       user?.id,
+      user?.role,
     );
     return new VacancyDto(
       vacancy.id,
@@ -249,7 +251,11 @@ export class VacanciesApiController {
   })
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string, @GetUser() user: User) {
-    const vacancy = await this.vacanciesService.delete(id, user?.id);
+    const vacancy = await this.vacanciesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
     return new VacancyDto(
       vacancy.id,
       vacancy.title,

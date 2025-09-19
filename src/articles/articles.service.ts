@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { Article } from '@prisma/client';
+import { Article, Role } from '@prisma/client';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
@@ -67,13 +67,14 @@ export class ArticlesService {
     id: string,
     updateArticleDto: UpdateArticleDto,
     userId: string,
+    role: string,
   ): Promise<Article> {
     const article = await this.findById(id);
     if (!article) {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId) {
+    if (article.userId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -83,13 +84,18 @@ export class ArticlesService {
     });
   }
 
-  async updatePhoto(id: string, url: string, userId: string): Promise<Article> {
+  async updatePhoto(
+    id: string,
+    url: string,
+    userId: string,
+    role: string,
+  ): Promise<Article> {
     const article = await this.findById(id);
     if (!article) {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId) {
+    if (article.userId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -101,13 +107,13 @@ export class ArticlesService {
     });
   }
 
-  async delete(id: string, userId: string): Promise<Article> {
+  async delete(id: string, userId: string, role: string): Promise<Article> {
     const article = await this.findById(id);
     if (!article) {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId) {
+    if (article.userId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

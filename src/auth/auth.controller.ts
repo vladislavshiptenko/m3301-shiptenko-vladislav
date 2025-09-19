@@ -46,7 +46,7 @@ export class AuthController {
         response,
         'public',
         recipeUserId,
-        new User(user.id, user.name, user.email, 'user'),
+        new User(user.id, user.name, user.email, user.role),
         {},
       );
 

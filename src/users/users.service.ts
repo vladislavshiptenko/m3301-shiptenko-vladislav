@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,6 +16,7 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
       hasPremium: false,
+      role: Role.User,
     };
 
     return this.database.user.create({ data: userWithHashedPassword });
@@ -37,8 +38,9 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
     userId: string,
+    role: string,
   ): Promise<User> {
-    if (id != userId) {
+    if (id != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -48,8 +50,13 @@ export class UsersService {
     });
   }
 
-  async updateAvatar(id: string, url: string, userId: string): Promise<User> {
-    if (id != userId) {
+  async updateAvatar(
+    id: string,
+    url: string,
+    userId: string,
+    role: string,
+  ): Promise<User> {
+    if (id != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -61,8 +68,8 @@ export class UsersService {
     });
   }
 
-  async delete(id: string, userId: string): Promise<User> {
-    if (id != userId) {
+  async delete(id: string, userId: string, role: string): Promise<User> {
+    if (id != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

@@ -87,6 +87,7 @@ export class ArticlesResolver {
       id,
       updateArticleDto,
       user?.id,
+      user?.role,
     );
     return new ArticleDto(
       article.id,
@@ -103,7 +104,7 @@ export class ArticlesResolver {
     @Args('id', { type: () => ID }) id: string,
     @GetUserGQL() user: User,
   ) {
-    const article = await this.articlesService.delete(id, user?.id);
+    const article = await this.articlesService.delete(id, user?.id, user?.role);
     return new ArticleDto(
       article.id,
       article.title,

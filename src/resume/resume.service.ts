@@ -7,7 +7,7 @@ import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { DatabaseService } from '../database/database.service';
 import { GetResumeDto } from './dto/get-resume.dto';
-import { Resume } from '@prisma/client';
+import { Resume, Role } from '@prisma/client';
 
 @Injectable()
 export class ResumeService {
@@ -89,13 +89,18 @@ export class ResumeService {
     });
   }
 
-  async update(id: string, updateResumeDto: UpdateResumeDto, userId: string) {
+  async update(
+    id: string,
+    updateResumeDto: UpdateResumeDto,
+    userId: string,
+    role: string,
+  ) {
     const resume = await this.findById(id);
     if (!resume) {
       throw new NotFoundException('Резюме не найдено');
     }
 
-    if (resume.userId != userId) {
+    if (resume.userId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -105,13 +110,13 @@ export class ResumeService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string, role: string) {
     const resume = await this.findById(id);
     if (!resume) {
       throw new NotFoundException('Резюме не найдено');
     }
 
-    if (resume.userId != userId) {
+    if (resume.userId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

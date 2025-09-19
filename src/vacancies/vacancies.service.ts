@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { Vacancy } from '@prisma/client';
+import { Role, Vacancy } from '@prisma/client';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { GetVacancyDto } from './dto/get-vacancy.dto';
@@ -20,6 +20,7 @@ export class VacanciesService {
   async create(
     createVacancyDto: CreateVacancyDto,
     userId: string,
+    role: string,
   ): Promise<Vacancy> {
     const company = await this.companiesService.findByName(
       createVacancyDto.companyName,
@@ -29,7 +30,7 @@ export class VacanciesService {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId !== userId) {
+    if (company.ownerId !== userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -61,6 +62,7 @@ export class VacanciesService {
     id: string,
     updateVacancyDto: UpdateVacancyDto,
     userId: string,
+    role: string,
   ): Promise<Vacancy> {
     const vacancy = await this.findById(id);
     if (!vacancy) {
@@ -73,7 +75,7 @@ export class VacanciesService {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId !== userId) {
+    if (company.ownerId !== userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -93,7 +95,7 @@ export class VacanciesService {
     });
   }
 
-  async delete(id: string, userId: string): Promise<Vacancy> {
+  async delete(id: string, userId: string, role: string): Promise<Vacancy> {
     const vacancy = await this.findById(id);
     if (!vacancy) {
       throw new NotFoundException('Вакансия не найдена');
@@ -105,7 +107,7 @@ export class VacanciesService {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId !== userId) {
+    if (company.ownerId !== userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

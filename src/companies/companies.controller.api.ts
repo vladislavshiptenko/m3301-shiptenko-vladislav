@@ -176,6 +176,7 @@ export class CompaniesApiController {
       id,
       updateCompanyDto,
       user?.id,
+      user?.role,
     );
     return new CompanyDto(
       company.id,
@@ -209,7 +210,11 @@ export class CompaniesApiController {
     type: ErrorResponseDto,
   })
   async remove(@Param('id') id: string, @GetUser() user: User) {
-    const company = await this.companiesService.delete(id, user?.id);
+    const company = await this.companiesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
     return new CompanyDto(
       company.id,
       company.name,

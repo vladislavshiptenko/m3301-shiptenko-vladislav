@@ -158,7 +158,12 @@ export class UsersApiController {
     @Body() updateUserDto: UpdateUserDto,
     @GetUser() user: User,
   ) {
-    const userObj = await this.usersService.update(id, updateUserDto, user?.id);
+    const userObj = await this.usersService.update(
+      id,
+      updateUserDto,
+      user?.id,
+      user?.role,
+    );
     return new UserDto(
       userObj.id,
       userObj.name,
@@ -191,7 +196,7 @@ export class UsersApiController {
     type: ErrorResponseDto,
   })
   async remove(@Param('id') id: string, @GetUser() user: User) {
-    const userObj = await this.usersService.delete(id, user?.id);
+    const userObj = await this.usersService.delete(id, user?.id, user?.role);
     return new UserDto(
       userObj.id,
       userObj.name,

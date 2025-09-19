@@ -27,6 +27,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import { GetUser } from '../decorators/get-user.decorator';
 import { User } from '../auth/entities/user.entity';
 import { MvcExceptionFilter } from '../filters/mvc-exception.filter';
+import { NotificationService } from '../notification/notification.service';
 
 @ApiExcludeController()
 @Controller('users')
@@ -35,6 +36,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly storageService: StorageService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/create')
@@ -52,6 +54,7 @@ export class UsersController {
     @Res() res: express.Response,
   ) {
     const user = await this.usersService.create(createUserDto);
+    this.notificationService.created('user', user.name);
     return res.redirect(`users/${user.id}`);
   }
 
@@ -128,7 +131,8 @@ export class UsersController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.usersService.update(id, updateUserDto, user?.id);
+    await this.usersService.update(id, updateUserDto, user?.id, user?.role);
+    this.notificationService.updated('user', user.name);
     return res.redirect(`/users/${id}`);
   }
 
@@ -139,7 +143,8 @@ export class UsersController {
     @Res() res: express.Response,
     @GetUser() user: User,
   ) {
-    await this.usersService.delete(id, user?.id);
+    await this.usersService.delete(id, user?.id, user?.role);
+    this.notificationService.deleted('user', user.name);
     return res.redirect(`/users`);
   }
 
@@ -156,6 +161,7 @@ export class UsersController {
       generateUniqueKey: true,
     });
 
-    await this.usersService.updateAvatar(id, result.url, user?.id);
+    await this.usersService.updateAvatar(id, result.url, user?.id, user?.role);
+    this.notificationService.updated('user', `${user.name} photo`);
   }
 }

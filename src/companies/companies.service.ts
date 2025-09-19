@@ -6,7 +6,7 @@ import {
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { DatabaseService } from '../database/database.service';
-import { Company } from '@prisma/client';
+import { Company, Role } from '@prisma/client';
 
 @Injectable()
 export class CompaniesService {
@@ -38,13 +38,14 @@ export class CompaniesService {
     id: string,
     updateCompanyDto: UpdateCompanyDto,
     userId: string,
+    role: string,
   ): Promise<Company> {
     const company = await this.findById(id);
     if (!company) {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId != userId) {
+    if (company.ownerId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -55,13 +56,13 @@ export class CompaniesService {
     });
   }
 
-  async delete(id: string, userId: string): Promise<Company> {
+  async delete(id: string, userId: string, role: string): Promise<Company> {
     const company = await this.findById(id);
     if (!company) {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId != userId) {
+    if (company.ownerId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -102,13 +103,14 @@ export class CompaniesService {
     id: string,
     url: string,
     userId: string,
+    role: string,
   ): Promise<Company> {
     const company = await this.findById(id);
     if (!company) {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId != userId) {
+    if (company.ownerId != userId || role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

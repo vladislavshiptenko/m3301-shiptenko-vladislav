@@ -25,6 +25,7 @@ export class VacanciesResolver {
     const vacancy = await this.vacanciesService.create(
       createVacancyDto,
       user?.id,
+      user?.role,
     );
     return new VacancyDto(
       vacancy.id,
@@ -112,6 +113,7 @@ export class VacanciesResolver {
       id,
       updateVacancyDto,
       user?.id,
+      user?.role,
     );
     return new VacancyDto(
       vacancy.id,
@@ -133,7 +135,11 @@ export class VacanciesResolver {
     @Args('id', { type: () => ID }) id: string,
     @GetUserGQL() user: User,
   ) {
-    const vacancy = await this.vacanciesService.delete(id, user?.id);
+    const vacancy = await this.vacanciesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
     return new VacancyDto(
       vacancy.id,
       vacancy.title,

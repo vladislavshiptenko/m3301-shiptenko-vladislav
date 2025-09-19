@@ -87,6 +87,7 @@ export class CompaniesResolver {
       id,
       updateCompanyDto,
       user?.id,
+      user?.role,
     );
     return new CompanyDto(
       company.id,
@@ -103,7 +104,11 @@ export class CompaniesResolver {
     @Args('id', { type: () => ID }) id: string,
     @GetUserGQL() user: User,
   ) {
-    const company = await this.companiesService.delete(id, user?.id);
+    const company = await this.companiesService.delete(
+      id,
+      user?.id,
+      user?.role,
+    );
     return new CompanyDto(
       company.id,
       company.name,
