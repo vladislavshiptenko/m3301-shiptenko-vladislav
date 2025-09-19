@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="container">
+    <form class="form" action="/vacancies/{{vacancy.id}}/edit" method="POST" id="form">
+      <div class="form__group">
+        <label class="form__label" for="title">Название вакансии:</label>
+        <input class="form__input" type="text" id="title" name="title" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="companyName">Название компании:</label>
+        <input class="form__input" type="text" id="companyName" name="companyName" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="minPrice">Минимальная цена:</label>
+        <input class="form__input" type="number" id="minPrice" name="minPrice" step="1" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="maxPrice">Максимальная цена:</label>
+        <input class="form__input" type="number" id="maxPrice" name="maxPrice" step="1" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="district">Район:</label>
+        <select class="form__select" name="district" id="district" required>
+          <option value="">Выберите район</option>
+          {{#each districts}}
+            <option value="{{this}}">
+              {{this}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="education">Образование:</label>
+        <select class="form__select" name="education" id="education" required>
+          <option value="">Выберите образование</option>
+          {{#each education}}
+            <option value="{{this}}">
+              {{this}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="condition">График:</label>
+        <select class="form__select" name="condition" id="condition" required>
+          <option value="">Выберите график</option>
+          {{#each condition}}
+            <option value="{{this}}">
+              {{this}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="phoneNumber">Номер телефона:</label>
+        <input class="form__input" type="text" id="phoneNumber" name="phoneNumber" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="description">Описание:</label>
+        <textarea class="form__textarea" id="description" name="description" rows="5" required></textarea>
+      </div>
+
+      <button class="form__button" type="submit">Добавить</button>
+    </form>
+  </div>
+</div>

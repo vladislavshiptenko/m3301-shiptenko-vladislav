@@ -1,0 +1,16 @@
+<div class="articles__inner">
+  <ul class="articles-list">
+    {{#each articles}}
+      <li class="articles-item">
+        {{#if photoURL}}
+          <img id="currentPhoto" src="{{photoURL}}" alt="{{title}}" class="article-image">
+        {{else}}
+          <img id="currentPhoto" src="/static/images/default-article-photo.png" alt="{{title}}" class="article-image">
+        {{/if}}
+        <a class="articles-item__link"
+           href="/articles/{{id}}"><h3
+          class="articles-item__title">{{title}}</h3></a>
+        <p class="articles-item__content">{{description}}</p></li>
+    {{/each}}
+  </ul>
+</div>

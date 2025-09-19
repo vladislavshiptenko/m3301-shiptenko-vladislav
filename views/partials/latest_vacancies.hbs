@@ -1,0 +1,11 @@
+<div class="latest__vacancy-inner"><h3 class="latest__vacancy-title">Последние вакансии</h3>
+  <ul class="latest__vacancy-list">
+    {{#each latest_vacancies}}
+    <li class="latest__vacancy-item"><a class="latest__vacancy-item-link"
+                                        href="/vacancies/{{id}}"><h3
+      class="latest__vacancy-item-title">{{title}}</h3></a>
+      <p class="latest__vacancy-item-description">{{description}}</p></li>
+    {{/each}}
+  </ul>
+  <a class="vacancy__list-link" href="/vacancies">Больше вакансий</a>
+</div>

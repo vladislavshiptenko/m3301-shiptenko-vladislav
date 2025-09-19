@@ -1,0 +1,56 @@
+<div class="container">
+  <h1 class="company-title">{{company.name}}</h1>
+  <div class="company-meta">
+    <span class="meta-item">{{company.user.name}}</span>
+    <span class="meta-item">{{company.createdAt}}</span>
+  </div>
+
+  <div class="company-content">
+    {{#if company.image}}
+      <img id="currentPhoto" src="{{company.image}}" alt="avatar" width="120" height="120" class="company-image">
+    {{else}}
+      <img id="currentPhoto" src="/static/images/default-avatar.png" alt="avatar" width="120" height="120" class="company-image">
+    {{/if}}
+
+    <form id="photoForm" enctype="multipart/form-data">
+      <input type="file" id="photoInput" name="photo" accept="image/*" hidden>
+
+      <div class="upload-buttons">
+        <button type="button" onclick="selectFile()" class="btn-primary">
+          Выбрать файл
+        </button>
+        <button type="submit" id="uploadBtn" class="btn-success" disabled>
+          Загрузить
+        </button>
+      </div>
+
+      <div id="fileInfo" style="display: none;">
+        <p>Выбран файл: <span id="fileName"></span></p>
+        <p>Размер: <span id="fileSize"></span></p>
+      </div>
+
+      <div id="progress" style="display: none;">
+        <div class="progress-bar">
+          <div id="progressFill"></div>
+        </div>
+        <span id="progressText">0%</span>
+      </div>
+
+      <div id="message"></div>
+    </form>
+
+    {{company.description}}
+  </div>
+
+  <nav class="company-nav">
+    <a href="/companies" class="btn btn-back">← Все компании</a>
+    <a href="/companies/{{company.id}}/edit" class="btn btn-primary">✏️ Редактировать</a>
+    <form method="POST" action="/companies/{{company.id}}/delete" style="display: inline;">
+      <button
+        type="submit"
+        class="btn btn-danger">
+        🗑️ Удалить
+      </button>
+    </form>
+  </nav>
+</div>

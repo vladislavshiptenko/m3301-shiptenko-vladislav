@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum District {
+  October
+  Soviet
+  Leninsky
+  Kirovsky
+  Seversk
+  Other
+}
+
+enum Condition {
+  PartTime
+  Shift
+  NightShift
+  Watch
+  FullTime
+  Remote
+  NotFullTime
+  Flexible
+}
+
+enum Education {
+  Secondary
+  SecondarySpecialized
+  Higher
+  Student
+}
+
+model User {
+  id         String  @id @default(cuid())
+  name       String
+  email      String  @unique
+  image      String?
+  password   String
+  hasPremium Boolean
+
+  companies Company[]
+  articles  Article[]
+  resume    Resume?
+
+  createdAt DateTime @default(now())
+
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Company {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  image       String?
+  description String
+  ownerId     String
+  vacancies   Vacancy[]
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("companies")
+}
+
+model Resume {
+  id          String    @id @default(cuid())
+  title       String
+  minPrice    Int
+  maxPrice    Int
+  description String?
+  district    District  @default(October)
+  condition   Condition @default(FullTime)
+  education   Education @default(Higher)
+  userId      String    @unique
+  phoneNumber String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("resume")
+}
+
+model Vacancy {
+  id          String    @id @default(cuid())
+  title       String
+  minPrice    Int
+  maxPrice    Int
+  description String?
+  companyId   String
+  district    District  @default(October)
+  condition   Condition @default(FullTime)
+  education   Education @default(Higher)
+  phoneNumber String
+
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("vacancies")
+}
+
+model Article {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  photoURL    String?
+  userId      String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("articles")
+}

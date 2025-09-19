@@ -1,0 +1,21 @@
+<ul class="resume-list">
+  {{#each resume_list_priorities}}
+  <li class="resume-item priority"><h3 class="resume-item__title"><a
+    href="/resume/{{id}}" class="resume-item__link">{{title}}</a>
+  </h3>
+    <p class="resume-item__salary">{{minPrice}}-{{maxPrice}} рублей</p>
+    <p class="resume-item__description">{{description}}</p>
+    <button class="resume-item__button">Связаться</button>
+  </li>
+  {{/each}}
+
+  {{#each resume_list}}
+  <li class="resume-item"><h3 class="resume-item__title"><a
+    href="/resume/{{id}}" class="resume-item__link">{{title}}</a>
+  </h3>
+    <p class="resume-item__salary">{{minPrice}}-{{maxPrice}} рублей</p>
+    <p class="resume-item__description">{{description}}</p>
+    <button class="resume-item__button">Связаться</button>
+  </li>
+  {{/each}}
+</ul>

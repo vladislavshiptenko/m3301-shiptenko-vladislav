@@ -1,0 +1,26 @@
+<div class="container">
+  {{#if pagination}}
+    <div class="results-info">
+      <p>
+        Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+        (всего пользователей: {{pagination.totalItems}})
+      </p>
+    </div>
+  {{/if}}
+
+  {{#if users.length}}
+    <div class="users">
+      <div class="container">
+        {{> users_list}}
+      </div>
+    </div>
+
+    {{> pagination}}
+
+  {{else}}
+    <div class="no-results">
+      <div class="no-results-icon">📝</div>
+      <h3>Пользователи не найдены</h3>
+    </div>
+  {{/if}}
+</div>

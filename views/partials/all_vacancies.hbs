@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="hot__vacancy">
+    <ul class="hot__vacancy-list">
+      {{#each hot_vacancies}}
+        <li class="hot__vacancy-item"><a class="hot__vacancy-item-link"
+                                         href="/vacancies/{{id}}"><h3
+          class="hot__vacancy-item-title">{{title}}</h3></a>
+          <p class="hot__vacancy-item-price">{{min_price}}-{{max_price}} рублей</p>
+          <p class="hot__vacancy-item-employer">{{employer}}</p></li>
+      {{/each}}
+    </ul>
+
+    <ul class="latest__vacancy-list">
+      {{#each latest_vacancies}}
+        <li class="latest__vacancy-item"><a class="latest__vacancy-item-link"
+                                            href="/vacancies/{{id}}"><h3
+          class="latest__vacancy-item-title">{{title}}</h3></a>
+          <p class="latest__vacancy-item-description">{{description}}</p></li>
+      {{/each}}
+    </ul>
+  </div>
+</div>

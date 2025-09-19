@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="page-header">
+    <h1>📚 {{title}}</h1>
+    <a href="/companies/create" class="btn btn-primary">✍️ Новая компания</a>
+  </div>
+
+  {{#if pagination}}
+    <div class="results-info">
+      <p>
+        Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+        (всего компаний: {{pagination.totalItems}})
+      </p>
+    </div>
+  {{/if}}
+
+  {{#if companies.length}}
+    <div class="companies">
+      <div class="container">
+        {{> companies}}
+      </div>
+    </div>
+
+    {{> pagination}}
+
+  {{else}}
+    <div class="no-results">
+      <div class="no-results-icon">📝</div>
+      <h3>Компании не найдены</h3>
+      <p>Пока что компаний нет. Хотите создать первую?</p>
+      <a href="/companies/create" class="btn btn-primary">✍️ Создать компанию</a>
+    </div>
+  {{/if}}
+</div>

@@ -1,0 +1,52 @@
+<div class="container">
+  <h1 class="user-title">{{user.name}}</h1>
+  <div class="user-meta">
+    <span class="meta-item">{{user.createdAt}}</span>
+  </div>
+
+  <div class="user-content">
+    {{#if user.image}}
+      <img id="currentPhoto" src="{{user.image}}" alt="avatar" width="120" height="120" class="user-image">
+    {{else}}
+      <img id="currentPhoto" src="/static/images/default-avatar.png" alt="avatar" width="120" height="120" class="user-image">
+    {{/if}}
+    <form id="photoForm" enctype="multipart/form-data">
+      <input type="file" id="photoInput" name="photo" accept="image/*" hidden>
+
+      <div class="upload-buttons">
+        <button type="button" onclick="selectFile()" class="btn-primary">
+          Выбрать файл
+        </button>
+        <button type="submit" id="uploadBtn" class="btn-success" disabled>
+          Загрузить
+        </button>
+      </div>
+
+      <div id="fileInfo" style="display: none;">
+        <p>Выбран файл: <span id="fileName"></span></p>
+        <p>Размер: <span id="fileSize"></span></p>
+      </div>
+
+      <div id="progress" style="display: none;">
+        <div class="progress-bar">
+          <div id="progressFill"></div>
+        </div>
+        <span id="progressText">0%</span>
+      </div>
+
+      <div id="message"></div>
+    </form>
+  </div>
+
+  <nav class="user-nav">
+    <a href="/users" class="btn btn-back">← Все пользователи</a>
+    <a href="/users/{{user.id}}/edit" class="btn btn-primary">✏️ Редактировать</a>
+    <form method="POST" action="/users/{{user.id}}/delete" style="display: inline;">
+      <button
+        type="submit"
+        class="btn btn-danger">
+        🗑️ Удалить
+      </button>
+    </form>
+  </nav>
+</div>

@@ -1,0 +1,19 @@
+<div class="companies__inner">
+  <ul class="companies-list">
+    {{#each companies}}
+      <li class="companies-item">
+        <div>
+          {{#if image}}
+            <img id="currentPhoto" src="{{image}}" alt="avatar" width="120" height="120" class="company-image">
+          {{else}}
+            <img id="currentPhoto" src="/static/images/default-avatar.png" alt="avatar" width="120" height="120"
+                 class="company-image">
+          {{/if}}
+        </div>
+        <a class="companies-item__link"
+           href="/companies/{{id}}"><h3
+          class="companies-item__title">{{name}}</h3></a>
+        <p class="companies-item__content">{{description}}</p></li>
+    {{/each}}
+  </ul>
+</div>

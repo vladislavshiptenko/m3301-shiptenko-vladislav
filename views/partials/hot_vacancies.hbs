@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="hot__vacancy"><h3 class="hot__vacancy-title">Горячие вакансии</h3>
+    <ul class="hot__vacancy-list">
+      {{#each hot_vacancies}}
+        <li class="hot__vacancy-item"><a class="hot__vacancy-item-link"
+                                         href="/vacancies/{{id}}"><h3
+          class="hot__vacancy-item-title">{{title}}</h3></a>
+          <p class="hot__vacancy-item-price">{{min_price}}-{{max_price}} рублей</p>
+          <p class="hot__vacancy-item-employer">{{employer}}</p></li>
+      {{/each}}
+    </ul>
+    <a class="vacancy__list-link" href="/vacancies">Больше вакансий</a>
+  </div>
+</div>

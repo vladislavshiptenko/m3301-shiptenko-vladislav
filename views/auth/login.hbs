@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="login-form">
+    <h1>Вход в систему</h1>
+
+    <form id="loginForm">
+      <div class="form__group">
+        <label class="form__label" for="email">Email:</label>
+        <input class="form__input" type="email" id="email" required>
+      </div>
+
+      <div class="form__group">
+        <label class="form__label" for="password">Пароль:</label>
+        <input class="form__input" type="password" id="password" required>
+      </div>
+
+      <button class="form__button" type="submit" id="loginBtn">Войти</button>
+
+      <div id="errorMessage" class="error hidden"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const loginBtn = document.getElementById('loginBtn');
+    const errorDiv = document.getElementById('errorMessage');
+
+    errorDiv.classList.add('hidden');
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Вход...';
+
+    try {
+      const response = await fetch('/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          formFields: [
+            { id: 'email', value: email },
+            { id: 'password', value: password },
+          ],
+        }),
+      });
+
+      const data = await response.json();
+      if (data.status === 'OK') {
+        console.log('✅ Успешный вход:', data.user);
+        window.location.href = '/';
+      } else if (data.status === 'WRONG_CREDENTIALS_ERROR') {
+        errorDiv.textContent = 'Неверный email или пароль';
+        errorDiv.classList.remove('hidden');
+      } else {
+        errorDiv.textContent = 'Произошла ошибка при входе';
+        errorDiv.classList.remove('hidden');
+      }
+
+    } catch (error) {
+      console.error('Login error:', error);
+      errorDiv.textContent = 'Ошибка соединения с сервером';
+      errorDiv.classList.remove('hidden');
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Войти';
+    }
+  });
+
+  async function checkSession() {
+    try {
+      const response = await fetch('/auth/session', {
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.exists) {
+          window.location.href = '/';
+        }
+      }
+    } catch (error) {
+      console.log('Пользователь не залогинен');
+    }
+  }
+
+  checkSession();
+</script>

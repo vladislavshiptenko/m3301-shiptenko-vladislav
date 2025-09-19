@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="page-header">
+    <h1>📚 {{title}}</h1>
+    <a href="/articles/create" class="btn btn-primary">✍️ Новая статья</a>
+  </div>
+  {{#if pagination}}
+    <div class="results-info">
+      <p>
+        Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+        (всего статей: {{pagination.totalItems}})
+      </p>
+    </div>
+  {{/if}}
+
+  {{#if articles.length}}
+    <div class="articles">
+      <div class="container">
+        {{> articles}}
+      </div>
+    </div>
+
+    {{> pagination}}
+
+  {{else}}
+    <div class="no-results">
+      <div class="no-results-icon">📝</div>
+      <h3>Статьи не найдены</h3>
+      <p>Пока что статей нет. Хотите создать первую?</p>
+      <a href="/articles/create" class="btn btn-primary">✍️ Создать статью</a>
+    </div>
+  {{/if}}
+</div>

@@ -1,0 +1,102 @@
+<div class="feed-resume__search">
+  <div class="container">
+    <form class="feed-resume__search-form" method="GET" action="/resume"><input class="feed-resume__search-input"
+                                                                                type="text" name="title"
+                                                                                placeholder="Найти резюме">
+      <button class="feed-resume__search-button">Поиск</button>
+    </form>
+  </div>
+</div>
+<div class="link__block">
+  <div class="container"><a class="page__link" href="../pages/index.hbs">Главная</a> &gt; Резюме
+  </div>
+</div>
+<div class="title__block">
+  <div class="container"><h3 class="title__text">Резюме</h3></div>
+</div>
+<div class="filter__resume-list__wrapper">
+  <div class="container">
+    <div class="filter__resume-list__inner">
+      <form class="filter" method="GET" action="/resume">
+        <div class="checkbox-list__inner">
+          <div class="title__checkbox-list__wrapper">
+            <h3 class="checkbox-list__title">Район в Томске</h3>
+            <div class="checkbox-list">
+              {{#each districts}}
+                <div class="checkbox-item">
+                  <input type="checkbox"
+                         id="district_{{@index}}"
+                         name="district"
+                         value="{{this}}">
+                  <label for="district_{{@index}}">{{this}}</label>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-list__inner">
+          <h3 class="checkbox-list__title">Тип занятости</h3>
+          <div class="checkbox-list__border">
+            {{#each condition}}
+              <div class="checkbox-item">
+                <input type="checkbox"
+                       id="schedule_{{@index}}"
+                       name="condition"
+                       value="{{this}}">
+                <label for="schedule_{{@index}}">{{this}}</label>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="checkbox-list__inner">
+          <h3 class="checkbox-list__title">Образование</h3>
+          <div class="checkbox-list__border">
+            {{#each education}}
+              <div class="checkbox-item">
+                <input type="checkbox"
+                       id="education_{{@index}}"
+                       name="education"
+                       value="{{this}}">
+                <label for="education_{{@index}}">{{this}}</label>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <button type="submit" class="filter-btn">Применить фильтры</button>
+      </form>
+      <div class="resume__inner">
+        <div class="page-header">
+          <h1>📚 {{title}}</h1>
+          <a href="/resume/create" class="btn btn-primary">✍️ Новое резюме</a>
+        </div>
+
+        {{#if pagination}}
+          <div class="results-info">
+            <p>
+              Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+              (всего резюме: {{pagination.totalItems}})
+            </p>
+          </div>
+        {{/if}}
+
+        {{#if resume_list.length}}
+          {{> resume_list}}
+        {{else if resume_list_priorities.length}}
+          {{> resume_list}}
+        {{else}}
+          <div class="no-results">
+            <div class="no-results-icon">📝</div>
+            <h3>Резюме не найдены</h3>
+            <p>Пока что резюме нет. Хотите создать первое?</p>
+            <a href="/resume/create" class="btn btn-primary">✍️ Создать резюме</a>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  {{> pagination}}
+</div>

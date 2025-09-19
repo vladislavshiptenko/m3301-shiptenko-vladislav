@@ -1,0 +1,28 @@
+<div class="container">
+  <h1 class="vacancy-title">{{vacancy.title}}</h1>
+  <div class="vacancy-meta">
+    <span class="meta-item">{{vacancy.company.name}}</span>
+    <span class="meta-item">{{vacancy.createdAt}}</span>
+  </div>
+
+  <div class="vacancy-content">
+    {{#if vacancy.company.image}}
+      <img src="{{vacancy.company.image}}" alt="{{vacancy.title}}" class="vacancy-image">
+    {{/if}}
+
+    <h2>{{vacancy.minPrice}}-{{vacancy.maxPrice}} рублей</h2>
+    {{vacancy.description}}
+  </div>
+
+  <nav class="vacancy-nav">
+    <a href="/vacancies" class="btn btn-back">← Все вакансии</a>
+    <a href="/vacancies/{{vacancy.id}}/edit" class="btn btn-primary">✏️ Редактировать</a>
+    <form method="POST" action="/vacancies/{{vacancy.id}}/delete" style="display: inline;">
+      <button
+        type="submit"
+        class="btn btn-danger">
+        🗑️ Удалить
+      </button>
+    </form>
+  </nav>
+</div>

@@ -1,0 +1,104 @@
+<div class="feed-vacancy__search">
+  <div class="container">
+    <form class="feed-vacancy__search-form" method="GET" action="/vacancies"><input class="feed-vacancy__search-input"
+                                                                                    type="text" name="title"
+                                                                                    placeholder="Найти вакансию">
+      <button class="feed-vacancy__search-button">Поиск</button>
+    </form>
+  </div>
+</div>
+<div class="link__block">
+  <div class="container"><a class="page__link" href="../pages/index.hbs">Главная</a> &gt; Вакансии
+    в Томске
+  </div>
+</div>
+<div class="title__block">
+  <div class="container"><h3 class="title__text">Работа в Томске</h3></div>
+</div>
+<div class="filter__vacancy-list__wrapper">
+  <div class="container">
+    <div class="filter__vacancy-list__inner">
+      <form class="filter" method="GET" action="/vacancies">
+        <div class="checkbox-list__inner">
+          <div class="title__checkbox-list__wrapper">
+            <h3 class="checkbox-list__title">Район в Томске</h3>
+            <div class="checkbox-list">
+              {{#each districts}}
+                <div class="checkbox-item">
+                  <input type="checkbox"
+                         id="district_{{@index}}"
+                         name="district"
+                         value="{{this}}">
+                  <label for="district_{{@index}}">{{this}}</label>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-list__inner">
+          <h3 class="checkbox-list__title">Тип занятости</h3>
+          <div class="checkbox-list__border">
+            {{#each condition}}
+              <div class="checkbox-item">
+                <input type="checkbox"
+                       id="schedule_{{@index}}"
+                       name="condition"
+                       value="{{this}}">
+                <label for="schedule_{{@index}}">{{this}}</label>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="checkbox-list__inner">
+          <h3 class="checkbox-list__title">Образование</h3>
+          <div class="checkbox-list__border">
+            {{#each education}}
+              <div class="checkbox-item">
+                <input type="checkbox"
+                       id="education_{{@index}}"
+                       name="education"
+                       value="{{this}}">
+                <label for="education_{{@index}}">{{this}}</label>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <button type="submit" class="filter-btn">Применить фильтры</button>
+      </form>
+
+      <div class="vacancy__inner">
+        <div class="page-header">
+          <h1>📚 {{title}}</h1>
+          <a href="/vacancies/create" class="btn btn-primary">✍️ Новая вакансия</a>
+        </div>
+
+        {{#if pagination}}
+          <div class="results-info">
+            <p>
+              Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+              (всего вакансий: {{pagination.totalItems}})
+            </p>
+          </div>
+        {{/if}}
+
+        {{#if hot_vacancies.length}}
+          {{> all_vacancies}}
+        {{else if latest_vacancies.length}}
+          {{> all_vacancies}}
+        {{else}}
+          <div class="no-results">
+            <div class="no-results-icon">📝</div>
+            <h3>Вакансии не найдены</h3>
+            <p>Пока что вакансий нет. Хотите создать первую?</p>
+            <a href="/vacancies/create" class="btn btn-primary">✍️ Создать вакансию</a>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  {{> pagination}}
+</div>

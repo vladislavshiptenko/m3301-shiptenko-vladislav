@@ -1,0 +1,25 @@
+<div class="main-vacancy__search">
+  <div class="container">
+    <form class="main-vacancy__search-form" method="GET" action="/vacancies">
+      <input class="main-vacancy__search-input" type="text" name="title" placeholder="Найти вакансию">
+      <button class="main-vacancy__search-button">Поиск</button>
+    </form>
+  </div>
+</div>
+<div class="hot__vacancy">
+  {{> hot_vacancies}}
+</div>
+<div class="latest__vacancy">
+  <div class="container">
+    {{> latest_vacancies}}
+  </div>
+</div>
+<div class="articles">
+  <div class="articles-title">
+    <div class="container"><h3>Статьи о томском рынке труда</h3></div>
+  </div>
+  <div class="container">
+    {{> articles}}
+    <a class="article__list-link" href="/articles">Больше статей</a>
+  </div>
+</div>

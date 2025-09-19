@@ -1,0 +1,30 @@
+<header class="header">
+  <div class="container">
+    <div class="header__inner">
+      <nav class="menu"><a class="logo" href="/"><img
+        src="/static/images/logo.png" alt="logo"></a>
+        <ul class="menu__list">
+          <li class="menu__list-item"><a class="menu__list-link {{active_vacancy}}"
+                                         href="/vacancies">Вакансии</a></li>
+          <li class="menu__list-item"><a class="menu__list-link {{active_resume}}" href="/resume">Резюме</a>
+          </li>
+          <li class="menu__list-item"><a class="menu__list-link {{active_company}}" href="/companies">Компании</a>
+          </li>
+        </ul>
+      </nav>
+      {{#if username}}
+        <div class="auth__block">
+          <p>Logged in as {{username}}</p>
+          <form action="/auth/logout" method="POST" style="display: inline;">
+            <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
+              Выйти
+            </button>
+          </form>
+        </div>
+      {{else}}
+        <div class="auth__block"><a class="login__link" href="/auth/login">Войти</a><a
+          class="registration__link" href="/users/create">Регистрация</a></div>
+      {{/if}}
+    </div>
+  </div>
+</header>

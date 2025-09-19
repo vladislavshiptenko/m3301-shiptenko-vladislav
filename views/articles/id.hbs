@@ -1,0 +1,56 @@
+<div class="container">
+  <h1 class="article-title">{{article.title}}</h1>
+  <div class="article-meta">
+    <span class="meta-item">{{article.user.name}}</span>
+    <span class="meta-item">{{article.createdAt}}</span>
+  </div>
+
+  <div class="article-content">
+    {{#if article.photoURL}}
+      <img id="currentPhoto" src="{{article.photoURL}}" alt="{{article.title}}" class="article-image">
+    {{else}}
+      <img id="currentPhoto" src="/static/images/default-article-photo.png" alt="{{article.title}}" class="article-image">
+    {{/if}}
+
+    <form id="photoForm" enctype="multipart/form-data">
+      <input type="file" id="photoInput" name="photo" accept="image/*" hidden>
+
+      <div class="upload-buttons">
+        <button type="button" onclick="selectFile()" class="btn-primary">
+          Выбрать файл
+        </button>
+        <button type="submit" id="uploadBtn" class="btn-success" disabled>
+          Загрузить
+        </button>
+      </div>
+
+      <div id="fileInfo" style="display: none;">
+        <p>Выбран файл: <span id="fileName"></span></p>
+        <p>Размер: <span id="fileSize"></span></p>
+      </div>
+
+      <div id="progress" style="display: none;">
+        <div class="progress-bar">
+          <div id="progressFill"></div>
+        </div>
+        <span id="progressText">0%</span>
+      </div>
+
+      <div id="message"></div>
+    </form>
+
+    {{article.description}}
+  </div>
+
+  <nav class="article-nav">
+    <a href="/articles" class="btn btn-back">← Все статьи</a>
+    <a href="/articles/{{article.id}}/edit" class="btn btn-primary">✏️ Редактировать</a>
+    <form method="POST" action="/articles/{{article.id}}/delete" style="display: inline;">
+      <button
+        type="submit"
+        class="btn btn-danger">
+        🗑️ Удалить
+      </button>
+    </form>
+  </nav>
+</div>

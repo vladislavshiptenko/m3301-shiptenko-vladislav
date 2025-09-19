@@ -1,0 +1,14 @@
+<ul class="users-list">
+  {{#each users}}
+    <li class="users-item">
+      {{#if image}}
+        <img id="currentPhoto" src="{{image}}" alt="avatar" width="120" height="120" class="user-image">
+      {{else}}
+        <img id="currentPhoto" src="/static/images/default-avatar.png" alt="avatar" width="120" height="120" class="user-image">
+      {{/if}}
+      <h3 class="users-item__title"><a
+      href="/users/{{id}}" class="users-item__link">{{name}}</a>
+    </h3>
+    </li>
+  {{/each}}
+</ul>

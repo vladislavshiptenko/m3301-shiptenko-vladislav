@@ -1,0 +1,28 @@
+<div class="container">
+  <h1 class="resume-title">{{resume.title}}</h1>
+  <div class="resume-meta">
+    <span class="meta-item">{{resume.user.name}}</span>
+    <span class="meta-item">{{resume.createdAt}}</span>
+  </div>
+
+  <div class="resume-content">
+    {{#if resume.user.image}}
+      <img src="{{resume.user.image}}" alt="{{resume.title}}" class="resume-image">
+    {{/if}}
+
+    <h2>{{resume.minPrice}}-{{resume.maxPrice}} рублей</h2>
+    {{resume.description}}
+  </div>
+
+  <nav class="resume-nav">
+    <a href="/resume" class="btn btn-back">← Все резюме</a>
+    <a href="/resume/{{resume.id}}/edit" class="btn btn-primary">✏️ Редактировать</a>
+    <form method="POST" action="/resume/{{resume.id}}/delete" style="display: inline;">
+      <button
+        type="submit"
+        class="btn btn-danger">
+        🗑️ Удалить
+      </button>
+    </form>
+  </nav>
+</div>

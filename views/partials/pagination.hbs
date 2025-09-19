@@ -1,0 +1,23 @@
+{{#if pagination}}
+  <div class="pagination">
+    {{#if pagination.hasPrevPage}}
+      <a href="/articles?page={{pagination.prevPage}}" class="btn btn-pagination">
+      ← Предыдущая
+      </a>
+    {{else}}
+      <span class="btn btn-pagination disabled">← Предыдущая</span>
+    {{/if}}
+
+    <span class="pagination-info">
+                            Страница {{pagination.currentPage}} из {{pagination.totalPages}}
+                        </span>
+
+    {{#if pagination.hasNextPage}}
+      <a href="/articles?page={{pagination.nextPage}}" class="btn btn-pagination">
+      Следующая →
+      </a>
+    {{else}}
+      <span class="btn btn-pagination disabled">Следующая →</span>
+    {{/if}}
+  </div>
+{{/if}}
