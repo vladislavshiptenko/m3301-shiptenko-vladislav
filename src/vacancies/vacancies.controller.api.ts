@@ -9,7 +9,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query, UseFilters,
+  Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { VacanciesService } from './vacancies.service';
@@ -44,8 +45,13 @@ export class VacanciesApiController {
     type: ErrorResponseDto,
   })
   @ApiResponse({
-    status: 404,
-    description: 'Компания не найдена',
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
     type: ErrorResponseDto,
   })
   @UseGuards(AuthGuard)
@@ -75,7 +81,7 @@ export class VacanciesApiController {
   @ApiResponse({
     status: 200,
     description: 'Вакансии найдены',
-    type: VacancyDto,
+    type: VacanciesResponse,
   })
   @ApiResponse({
     status: 400,
@@ -83,8 +89,8 @@ export class VacanciesApiController {
     type: ErrorResponseDto,
   })
   @ApiResponse({
-    status: 404,
-    description: 'Не найдено',
+    status: 500,
+    description: 'Внутренняя ошибка',
     type: ErrorResponseDto,
   })
   @CacheControl({
@@ -138,6 +144,11 @@ export class VacanciesApiController {
     description: 'Не найдено',
     type: ErrorResponseDto,
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   @CacheControl({
     public: true,
     maxAge: 3600,
@@ -167,7 +178,7 @@ export class VacanciesApiController {
   @Patch(':id')
   @ApiResponse({
     status: 200,
-    description: 'Пользователь создан',
+    description: 'Вакансия обновлена',
     type: VacancyDto,
   })
   @ApiResponse({
@@ -176,8 +187,18 @@ export class VacanciesApiController {
     type: ErrorResponseDto,
   })
   @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
     status: 404,
-    description: 'Компания или вакансия не найдены',
+    description: 'Не найдено',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
     type: ErrorResponseDto,
   })
   @UseGuards(AuthGuard)
@@ -208,8 +229,23 @@ export class VacanciesApiController {
   @Delete(':id')
   @ApiResponse({
     status: 200,
-    description: 'Пользователь удалён',
+    description: 'Вакансия удалена',
     type: VacancyDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Не найдено',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
   })
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string, @GetUser() user: User) {

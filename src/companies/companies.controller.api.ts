@@ -4,22 +4,26 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
   Post,
-  Query, UseFilters,
+  Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompanyDto } from './dto/company.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../guards/auth.guard';
 import { GetUser } from '../decorators/get-user.decorator';
 import { User } from '../auth/entities/user.entity';
 import { ApiExceptionFilter } from '../filters/api-exception.filter';
+import { ErrorResponseDto } from '../common/dto/error-response.dto';
+import { CompaniesResponse } from './dto/companies.response';
 
 @ApiTags('companies')
 @Controller('api/companies')
@@ -29,6 +33,26 @@ export class CompaniesApiController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Компания создана',
+    type: CompanyDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка валидации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   async create(
     @Body() createCompanyDto: CreateCompanyDto,
     @GetUser() user: User,
@@ -47,15 +71,30 @@ export class CompaniesApiController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Компании найдены',
+    type: CompaniesResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка валидации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    try {
-      const limit = 6;
+    const limit = 6;
 
-      const result = await this.companiesService.findAllPaginated(page, limit);
+    const result = await this.companiesService.findAllPaginated(page, limit);
 
-      return result.companies.map(
+    return new CompaniesResponse(
+      result.companies.map(
         (company) =>
           new CompanyDto(
             company.id,
@@ -64,28 +103,32 @@ export class CompaniesApiController {
             company.createdAt,
             company.image,
           ),
-      );
-    } catch (error) {
-      console.error('Ошибка при получении компаний:', error);
-      return {
-        error: 'Произошла ошибка при загрузке компаний',
-        title: 'Ошибка сервера',
-        companies: [],
-        pagination: null,
-        active_company: 'active',
-      };
-    }
+      ),
+      result.total,
+    );
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Компания найдена',
+    type: CompanyDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Не найдено',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   async findOne(@Param('id') id: string) {
     const company = await this.companiesService.findById(id);
 
     if (!company) {
-      return {
-        error: 'Компания не найдена',
-        title: 'Ошибка 404',
-      };
+      throw new NotFoundException('Компания не найдена');
     }
 
     return new CompanyDto(
@@ -99,6 +142,31 @@ export class CompaniesApiController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Компания обновлена',
+    type: CompanyDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка валидации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Не найдено',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   async update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
@@ -120,6 +188,26 @@ export class CompaniesApiController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Компания удалена',
+    type: CompanyDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Не найдено',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Внутренняя ошибка',
+    type: ErrorResponseDto,
+  })
   async remove(@Param('id') id: string, @GetUser() user: User) {
     const company = await this.companiesService.delete(id, user?.id);
     return new CompanyDto(

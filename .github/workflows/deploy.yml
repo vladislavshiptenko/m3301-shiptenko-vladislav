@@ -2,7 +2,7 @@ name: Deploy to Yandex Cloud
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -127,7 +127,7 @@ jobs:
 
           yc compute instance restart $VM_NAME
 
-          sleep 60
+          sleep 300
           VM_IP=$(yc compute instance get $VM_NAME --format json | jq -r '.network_interfaces[0].primary_v4_address.one_to_one_nat.address')
 
           echo "✅ Деплой завершен!"

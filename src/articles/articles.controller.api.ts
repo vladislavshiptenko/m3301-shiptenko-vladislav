@@ -9,7 +9,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query, UseFilters,
+  Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
@@ -39,6 +40,11 @@ export class ArticlesApiController {
   @ApiResponse({
     status: 400,
     description: 'Ошибка валидации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
     type: ErrorResponseDto,
   })
   @ApiResponse({
@@ -146,6 +152,11 @@ export class ArticlesApiController {
     type: ErrorResponseDto,
   })
   @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
     status: 404,
     description: 'Не найдено',
     type: ErrorResponseDto,
@@ -180,6 +191,16 @@ export class ArticlesApiController {
     status: 200,
     description: 'Статья удалена',
     type: ArticleDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Ошибка авторизации',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Не найдено',
+    type: ErrorResponseDto,
   })
   @ApiResponse({
     status: 500,
