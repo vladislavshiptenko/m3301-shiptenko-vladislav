@@ -1,18 +1,19 @@
 #!/bin/bash
 
-VM_NAME="compute-vm-2-2-20-ssd-1758308034564"
+VM_NAME="fv4bquf2kk0osq7t2qgn"
+
 
 ENV_CONTENT=$(base64 -w 0 .env)
 
 cat > cloud-init.yaml << EOF
 #cloud-config
-runcmd:
+bootcmd:
   - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
   - apt-get install -y nodejs git postgresql-client python3 make g++ build-essential
   - npm install -g pm2 @nestjs/cli
 
   - cd /root
-  - git clone https://github.com/your-username/your-repo.git app || (cd app && git pull)
+  - git clone https://github.com/vladislavshiptenko/m3301-shiptenko-vladislav.git app || (cd app && git pull)
   - cd app
   - echo "$ENV_CONTENT" | base64 -d > .env
 
@@ -36,7 +37,6 @@ runcmd:
   - npm install class-transformer@0.5.1
   - npm install class-validator@0.14.2
   - npm install express-handlebars@8.0.3
-  - npm install graphql-playground-middleware-express@1.7.23
   - npm install graphql@16.11.0
   - npm install multer@2.0.2
   - npm install passport-jwt@4.0.1
@@ -74,20 +74,23 @@ runcmd:
   - npm install -D eslint@9.34.0
   - npm install -D eslint-config-prettier@10.1.8
   - npm install -D eslint-plugin-prettier@5.5.4
+  - npm install graphql-playground-middleware-express@1.7.23 --force
 
   - npx prisma db push
 
   - npm run build
 
+  - export HOME=/root
   - pm2 delete nestjs-app || true
-  - pm2 start dist/main.js --name "nestjs-app" -i max
-  - pm2 save
-  - pm2 startup systemd --auto-startup
+  - pm2 start dist/main.js --name "nestjs-app" --instances 2 2>&1 | tee -a /var/log/deploy.log
+  - pm2 save 2>&1 | tee -a /var/log/deploy.log
+
+  - env HOME=/root pm2 startup systemd -u root --hp /root 2>&1 | tee -a /var/log/deploy.log
 EOF
 
 sed -i "s/\$ENV_CONTENT/$ENV_CONTENT/" cloud-init.yaml
 
-yc compute instance update-metadata $VM_NAME --metadata-from-file user-data=cloud-init.yaml
+yc compute instance add-metadata $VM_NAME --metadata-from-file user-data=cloud-init.yaml
 
 yc compute instance restart $VM_NAME
 
@@ -99,5 +102,3 @@ echo "🌐 IP: $VM_IP"
 echo "🔗 Приложение: http://$VM_IP:5000"
 echo "📚 Swagger: http://$VM_IP:5000/api"
 echo "🎯 GraphQL: http://$VM_IP:5000/graphql"
-
-rm cloud-init.yaml
