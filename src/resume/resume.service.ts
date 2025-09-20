@@ -100,7 +100,7 @@ export class ResumeService {
       throw new NotFoundException('Резюме не найдено');
     }
 
-    if (resume.userId != userId || role != Role.Admin) {
+    if (resume.userId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -116,7 +116,7 @@ export class ResumeService {
       throw new NotFoundException('Резюме не найдено');
     }
 
-    if (resume.userId != userId || role != Role.Admin) {
+    if (resume.userId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

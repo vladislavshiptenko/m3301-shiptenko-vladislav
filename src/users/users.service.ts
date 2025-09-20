@@ -40,7 +40,7 @@ export class UsersService {
     userId: string,
     role: string,
   ): Promise<User> {
-    if (id != userId || role != Role.Admin) {
+    if (id != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -56,7 +56,7 @@ export class UsersService {
     userId: string,
     role: string,
   ): Promise<User> {
-    if (id != userId || role != Role.Admin) {
+    if (id != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -69,7 +69,7 @@ export class UsersService {
   }
 
   async delete(id: string, userId: string, role: string): Promise<User> {
-    if (id != userId || role != Role.Admin) {
+    if (id != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

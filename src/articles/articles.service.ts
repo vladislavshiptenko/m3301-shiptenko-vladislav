@@ -74,7 +74,7 @@ export class ArticlesService {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId || role != Role.Admin) {
+    if (article.userId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -95,7 +95,7 @@ export class ArticlesService {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId || role != Role.Admin) {
+    if (article.userId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -113,7 +113,7 @@ export class ArticlesService {
       throw new NotFoundException('Статья не найдена');
     }
 
-    if (article.userId != userId || role != Role.Admin) {
+    if (article.userId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 

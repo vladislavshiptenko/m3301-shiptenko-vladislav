@@ -62,7 +62,7 @@ export class CompaniesService {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId != userId || role != Role.Admin) {
+    if (company.ownerId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
@@ -110,7 +110,7 @@ export class CompaniesService {
       throw new NotFoundException('Компания не найдена');
     }
 
-    if (company.ownerId != userId || role != Role.Admin) {
+    if (company.ownerId != userId && role != Role.Admin) {
       throw new UnauthorizedException();
     }
 
